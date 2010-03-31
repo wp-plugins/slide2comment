@@ -6,11 +6,20 @@ Requires at least: 2.0.2
 Tested up to: 2.9
 Stable tag: 1.2.3
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Sexy Slider to protect your blog against spam.
 
 == Description ==
 
-My aim was it to build an anti-spam captcha which just look awesome and people have fun to use it. I found an iPhone-like slider at Aboone which is just what I've searched for. I implement a Wordpress captcha, which mark all comments as spam, if you haven't use the slider before. Hope you enjoy it!
+My aim was it to build an anti-spam captcha which just look awesome and people have fun to use it. Not like these stupid and annoying "What-is-2-plus-3" ones. Founding an iPhone-like slider at <a href="http://www.aboone.com/javascript-iphone-lock-slider-with-jquery">Aboone</a> which is just what I've searched for, I starteted to work. With this plugin you have the possibility to add a <b>sexy slider</b> to your comments, which mark all comments as spam, if you haven't use the slider before. Hope you enjoy it!
+
+This is my <b>first plugin</b>, so I will be very thankful if I get feedback!
+
+= Plans for next versions: =
+* better Hashsystem
+* Adminpanel
+* unique sliders with easy CSS or Options
+* noClick for Sliding
+* make it more compatible for older versions
 
 == Installation ==
 
@@ -78,4 +87,3 @@ Override these CSS Elements:
 * The Trackback bug may be fixed
 * Works on Firefox now, too
 * Hash-System
-
