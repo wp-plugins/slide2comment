@@ -4,7 +4,7 @@ Donate link: -
 Tags: comments, anti, spam, slider, sexy
 Requires at least: 2.0.2
 Tested up to: 2.9
-Stable tag: 1.4.11
+Stable tag: 1.2.3
 
 Sexy Slider to protect your blog against spam.
 
