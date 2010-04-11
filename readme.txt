@@ -4,7 +4,7 @@ Donate link: -
 Tags: comments, anti, spam, slider, sexy
 Requires at least: 2.0.2
 Tested up to: 2.9
-Stable tag: 1.2.3
+Stable tag: 1.4.11
 
 Sexy Slider to protect your blog against spam.
 
@@ -16,10 +16,12 @@ This is my <b>first plugin</b>, so I will be very thankful if I get feedback!
 
 = Plans for next versions: =
 * better Hashsystem
-* Adminpanel
-* unique sliders with easy CSS or Options
-* noClick for Sliding
-* make it more compatible for older versions
+* <strike>Adminpanel</strike> done!
+* <strike>unique sliders with easy CSS or Options</strike> done!
+* <strike>noClick for Sliding</strike> done!
+* <strike>make it more compatible for older versions</strike> done!
+* sexy Captcha for noJS-Users
+* (WYSISWG Editor? May need help ;) )
 
 == Installation ==
 
@@ -32,7 +34,9 @@ This is my <b>first plugin</b>, so I will be very thankful if I get feedback!
 
 = How can I edit the slider? =
 
-Override these CSS Elements:
+Go to the AdminMenu "Slide2Comment" and edit your CSS there.
+
+Alternative - override these CSS Elements:
 
 		<style type="text/css"> 
 			.track-center{
@@ -87,3 +91,8 @@ Override these CSS Elements:
 * The Trackback bug may be fixed
 * Works on Firefox now, too
 * Hash-System
+
+= 1.4.11 =
+* More compatible with older systems (wp_enqueue_scripts, pluginpath)
+* AdminMenu, now you can edit easily the css of the sliders (with previews) and change options
+* Option: noClick - Just move your mouse, no need to click!

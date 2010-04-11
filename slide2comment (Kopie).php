@@ -72,7 +72,6 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 		$path = plugins_url('img/', __FILE__ );
 		?>
 			<style type="text/css"> 
-			<? if(get_option('s2c_css') == '') { ?>
 				.track-center{
 					background-image: url(<?=$path ?>track.png);
 					height: 45px;
@@ -110,9 +109,9 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 					position:relative;
 					width:76px;
 				}
-			<? } else echo get_option('s2c_css'); ?>
 			</style>
 		<?
+		return $theCSS;
 	}
 	add_action('wp_print_styles', 'addCSS');
 
@@ -161,7 +160,6 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 /**** Hooks End ****/
 
 /**** Admin Menu ****/
-
 function addAdminMenu() {
 
 	// Add a new submenu under Options:
@@ -176,23 +174,41 @@ function addAdminMenu() {
 	// register setting options
 	function register_mysettings() {
 		register_setting( 's2c-settings-group', 's2c_noClick' );
-		//register_setting( 's2c-appearances-group', 's2c_css' );
+		register_setting( 's2c-appearances-group', 's2c_css' );
 	}
 
 	// displays the page content for the Test Options submenu
 	function s2c_admin_page() {
+		
+		//variables for the field and option names
+		$opt_noClick = 's2c_noClick';
+		$css = 's2c_css';
+		$hidden_field_setting = 'fucking_add';
+		$hidden_field_appearances = 'fucki_add';
+
+		// Read in existing option value from database
+		$opt_val_noClick = get_option( $opt_noClick );
+		$val_css = get_option( $css );
 
 		// See if the user has posted us some information
 		// If they did, this hidden field will be set to 'Y'
-		if( $_POST[ 'fucking_add_settings' ] == 'Y' ) { 
+		if( $_POST[ $hidden_field_setting ] == 'Y' ) {
+		    // Read their posted value
+		    $opt_val_noClick = $_POST[ 'noClick' ];
+
+		    // Save the posted value in the database
+		    update_option( $opt_noClick, $opt_val_noClick );
+
 			?>
 			<div class="updated"><p><strong>Options saved.</strong></p></div>
 			<?
 		}
-
-		if( $_POST[ 'fucki_add_css' ] == 'X' ) {		
+	
+		if( $_POST[ $hidden_field_appearances ] == 'X' ) {
+			$val_css = $_POST[ 'css' ];
+			update_option( $css, $val_css );			
 			?>
-			<div class="updated"><p><strong>Slider updated!</strong></p></div>
+			<div class="updated"><p><strong>Slider updated.</strong></p></div>
 			<?
 		}
 
@@ -206,8 +222,81 @@ function addAdminMenu() {
 				<div id="sexyslider"></div>
 			<form name="form1" method="post" action="">
 			 <?php settings_fields( 's2c-appearances-group' ); ?>
-			<input type="hidden" name="<?php echo 'fucki_add_css'; ?>" value="X">
+			<input type="hidden" name="<?php echo $hidden_field_appearances; ?>" value="X">
 <textarea id="S2C_Style" name="css" cols="73" rows="30">
+<? if($val_css == '') { ?>
+.track-center{
+	background-image: url(<?=$path ?>track.png);
+	height: 45px;
+	margin: 0px 10px;
+}
+
+.track-left{
+	width: 10px;
+	height: 45px;
+	float: left;
+	background-image: url(<?=$path ?>trackleft.png);
+}
+
+.track-right{
+	width: 10px;
+	height: 45px;
+	float: right;
+	background-image: url(<?=$path ?>trackright.png);
+}
+
+.track-message{
+	color:white;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:24px;
+	padding:9px 18px;
+	text-align:right;
+}
+
+.handle{
+	background-image: url(<?=$path ?>handles.png);
+	bottom:45px;
+	cursor:pointer;
+	height:39px;
+	margin:3px 4px;
+	position:relative;
+	width:76px;
+}
+<? } else echo $val_css; ?>
+</textarea><br />
+<input type="submit" name="Submit" value="Submit" />
+</form>
+			<hr />
+			<h3>Slider Options</h3>
+			<form name="form1" method="post" action="">
+			 <?php settings_fields( 's2c-settings-group' ); ?>
+			<input type="hidden" name="<?php echo $hidden_field_setting; ?>" value="Y">
+
+			<p>
+			Move Slider without clicking: 
+			<select name="noClick">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</select><br />
+
+			<input type="submit" name="Submit" value="Submit" />
+			</p><hr />
+			
+			<p>
+			<?php echo get_option('s2c_noClick'); ?>
+			</p>
+			</form>
+		</div>
+		<?
+	}
+	
+}
+add_action('admin_menu', 'addAdminMenu');
+
+function addAdminMenuCSS() {
+	$path = plugins_url('img/', __FILE__ );
+	?>
+	<style type="text/css"> 
 <? if(get_option('s2c_css') == '') { ?>
 .track-center{
 	background-image: url(<?=$path ?>track.png);
@@ -247,90 +336,7 @@ function addAdminMenu() {
 	width:76px;
 }
 <? } else echo get_option('s2c_css'); ?>
-</textarea><br />
-			<input type="submit" name="Submit" value="Submit" />
-			</form>
-			<hr />
-			<h3>Slider Options</h3>
-			<form name="form1" method="post" action="">
-			 <?php settings_fields( 's2c-settings-group' ); ?>
-			<input type="hidden" name="<?php echo 'fucking_add_settings'; ?>" value="Y">
-
-			<p>
-			Move Slider without clicking: 
-			<select name="noClick">
-				<option value="1"<?=((get_option('s2c_noClick') == '1')?" selected=\"selected\"":"") ?>>Yes</option>
-				<option value="0"<?=((get_option('s2c_noClick') == '0')?" selected=\"selected\"":"") ?>>No</option>
-			</select><br />
-
-			<input type="submit" name="Submit" value="Submit" />
-			</p><hr />
-			
-			<p>
-			<?php echo get_option('s2c_noClick'); ?>
-			</p>
-			</form>
-		</div>
-		<?
-	}
-	
-}
-add_action('admin_menu', 'addAdminMenu');
-
-function save_option(){
-	if( $_POST[ 'fucki_add_css' ] == 'X' )
-		    update_option( 's2c_css', $_POST[ 'css' ] );
-
-	if( $_POST[ 'fucking_add_settings' ] == 'Y' )
-		    update_option( 's2c_noClick', $_POST[ 'noClick' ] );
-
-}
-add_action('admin_init', 'save_option');
-
-function addAdminMenuCSS() {
-	$path = plugins_url('img/', __FILE__ );
-	?>
-	<style type="text/css">
-	<? if(get_option('s2c_css') == '') { ?>
-		.track-center{
-			background-image: url(<?=$path ?>track.png);
-			height: 45px;
-			margin: 0px 10px;
-		}
-
-		.track-left{
-			width: 10px;
-			height: 45px;
-			float: left;
-			background-image: url(<?=$path ?>trackleft.png);
-		}
-
-		.track-right{
-			width: 10px;
-			height: 45px;
-			float: right;
-			background-image: url(<?=$path ?>trackright.png);
-		}
-
-		.track-message{
-			color:white;
-			font-family:Arial,Helvetica,sans-serif;
-			font-size:24px;
-			padding:9px 18px;
-			text-align:right;
-		}
-
-		.handle{
-			background-image: url(<?=$path ?>handles.png);
-			bottom:45px;
-			cursor:pointer;
-			height:39px;
-			margin:3px 4px;
-			position:relative;
-			width:76px;
-		}
-	<? } else echo get_option('s2c_css'); ?>
-		</style>
+	  </style>
 	<?
 }
 add_action('admin_print_styles', 'addAdminMenuCSS');
