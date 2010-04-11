@@ -259,15 +259,11 @@ function addAdminMenu() {
 			<p>
 			Move Slider without clicking: 
 			<select name="noClick">
-				<option value="1"<?=((get_option('s2c_noClick') == '1')?" selected=\"selected\"":"") ?>>Yes</option>
 				<option value="0"<?=((get_option('s2c_noClick') == '0')?" selected=\"selected\"":"") ?>>No</option>
+				<option value="1"<?=((get_option('s2c_noClick') == '1')?" selected=\"selected\"":"") ?>>Yes</option>
 			</select><br />
 
 			<input type="submit" name="Submit" value="Submit" />
-			</p><hr />
-			
-			<p>
-			<?php echo get_option('s2c_noClick'); ?>
 			</p>
 			</form>
 		</div>
