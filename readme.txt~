@@ -4,7 +4,7 @@ Donate link: -
 Tags: comments, anti, spam, slider, sexy
 Requires at least: 2.0.2
 Tested up to: 2.9
-Stable tag: 1.4.12
+Stable tag: 1.4.11
 
 Sexy Slider to protect your blog against spam.
 
@@ -19,7 +19,7 @@ This is my <b>first plugin</b>, so I will be very thankful if I get feedback!
 * <strike>Adminpanel</strike> done!
 * <strike>unique sliders with easy CSS or Options</strike> done!
 * <strike>noClick for Sliding</strike> done!
-* make it more compatible for older versions
+* <strike>make it more compatible for older versions</strike> done!
 * sexy Captcha for noJS-Users
 * (WYSISWG Editor? May need help ;) )
 
@@ -92,7 +92,7 @@ Alternative - override these CSS Elements:
 * Works on Firefox now, too
 * Hash-System
 
-= 1.4.12 =
-* More compatible with older systems (wp_enqueue_scripts)
+= 1.4.11 =
+* More compatible with older systems (wp_enqueue_scripts, pluginpath)
 * AdminMenu, now you can edit easily the css of the sliders (with previews) and change options
 * Option: noClick - Just move your mouse, no need to click!

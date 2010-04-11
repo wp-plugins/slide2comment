@@ -3,7 +3,7 @@
 Plugin Name: Slide2Comment - Anti-Spam in a sexy way
 Plugin URI: http://slide2comment.longhoang.de
 Description: Adds a sexy iPhone lock slider to block spambots. If the slider hasn't been unlocked, the comment will be mark as spam.
-Version: 1.4.12
+Version: 1.4.11
 Author: Long Hoang
 Author URI: http://longhoang.de
 License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
@@ -17,7 +17,7 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 /**** Functions ****/
 
 //Extend the function plugins_url for older versions
-/*	if ( version_compare( $wp_version, '2.8dev', '<' ) ) {
+	if ( version_compare( $wp_version, '2.8dev', '<' ) ) {
 		function plugins_url($path = '', $plugin = '') {
 		  if ( function_exists('is_ssl') )
 			$scheme = ( is_ssl() ? 'https' : 'http' );
@@ -41,7 +41,7 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 
 		  return apply_filters('plugins_url', $url, $path, $plugin);
 		}
-	}*/
+	}
 
 //Notify Mail
 	function email_notify($comment) {
