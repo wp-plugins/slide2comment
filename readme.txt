@@ -1,10 +1,10 @@
 === Slide2Comment ===
 Contributors: yobignol
-Donate link: -
+Donate link: http://bit.ly/bgyVKC
 Tags: comments, anti, spam, slider, sexy
 Requires at least: 2.0.2
 Tested up to: 2.9
-Stable tag: 1.4.13
+Stable tag: 1.7.11
 
 Sexy Slider to protect your blog against spam.
 
@@ -96,3 +96,8 @@ Alternative - override these CSS Elements:
 * More compatible with older systems (wp_enqueue_scripts)
 * AdminMenu, now you can edit easily the css of the sliders (with previews) and change options
 * Option: noClick - Just move your mouse, no need to click!
+
+= 1.7.1 =
+*Changing color of sliding element in your Admin Panel
+*You can turn off the EMail notification in your Admin Panel
+*some Bugfixes

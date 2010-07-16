@@ -3,7 +3,7 @@
 Plugin Name: Slide2Comment - Anti-Spam in a sexy way
 Plugin URI: http://slide2comment.longhoang.de
 Description: Adds a sexy iPhone lock slider to block spambots. If the slider hasn't been unlocked, the comment will be mark as spam.
-Version: 1.4.13
+Version: 1.7.1
 Author: Long Hoang
 Author URI: http://longhoang.de
 License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
@@ -44,8 +44,8 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 	}*/
 
 //Notify Mail
-	function email_notify($comment) {
-		$email = get_bloginfo('admin_email');
+	function email_notify($comment) {     
+        $email = get_bloginfo('admin_email');
 		$blog = get_bloginfo('name');
 		$body = @$comment['comment_content'];
 		if (empty($email) || empty($blog) || empty($body)) {
@@ -122,13 +122,13 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 			<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
 			<script type='text/javascript' src='<?=$path ?>/slider.js'></script>
 			<script type="text/javascript"> 
-				$(function(){
-					$("#commentform").css("display", "none");
+				$(document).ready(function(){
+					$('#commentform').css('display', 'none');
 					$('#commentform').after($('#sexyslider')); 
 				
 				  var sslider = new Slider("sexyslider",{
 					  message: "Slide 2 Comment",
-					  color: "green",
+					  color: "<? if (get_option('s2c_color') != '') echo get_option('s2c_color'); else echo "green"; ?>",
 					<? if(get_option('s2c_noClick') == 1) { ?>
 					  mode: "noclick",
 					<? } ?>
@@ -136,7 +136,6 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 						$('#commentform').css('display', 'block');
 						$('#sexyslider').css('display', 'none');
 						$('#commentform').append('<input type="hidden" name="add" value="<?=md5(get_bloginfo('url')) ?>">');
-					
 					  }
 				  });
 				  sslider.init();
@@ -145,17 +144,26 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 		<?
 	}
 	add_action('wp_enqueue_scripts', 'addJS');
-
+    
+    function addMarker($comment){
+        if($_POST['add'] != md5(get_bloginfo('url')) )
+            $comment['comment_content'] = "=]MARKED AS SPAM BY SLIDE2COMMENT[=\n".$comment['comment_content'];
+        return $comment;
+    }
+    add_filter('preprocess_comment', 'addMarker');
+    
 	function comment_approvement($id){
 		global $commentdata;
 		if($commentdata['comment_content'] == '')return true;
 		if($_POST['add'] != md5(get_bloginfo('url')) ){
-		
-			$commentdata['comment_content'] = "=]MARKED AS SPAM BY SLIDE2COMMENT[=\n".$commentdata['comment_content'];
-			email_notify($GLOBALS['commentdata']);
-		
+            
+            if(get_option("s2c_eMails") != "no"){
+		  	   email_notify($GLOBALS['commentdata']);
+            }		
 			wp_set_comment_status($id, 'spam');
 		}
+        
+        return $commentdata;
 	}
 	add_action('comment_post', 'comment_approvement');
 /**** Hooks End ****/
@@ -175,6 +183,7 @@ function addAdminMenu() {
 
 	// register setting options
 	function register_mysettings() {
+		register_setting( 's2c-appearances-group', 's2c_color' );
 		register_setting( 's2c-settings-group', 's2c_noClick' );
 		//register_setting( 's2c-appearances-group', 's2c_css' );
 	}
@@ -206,7 +215,7 @@ function addAdminMenu() {
 				<div id="sexyslider"></div>
 			<form name="form1" method="post" action="">
 			 <?php settings_fields( 's2c-appearances-group' ); ?>
-			<input type="hidden" name="<?php echo 'fucki_add_css'; ?>" value="X">
+			
 <textarea id="S2C_Style" name="css" cols="73" rows="30">
 <? if(get_option('s2c_css') == '') { ?>
 .track-center{
@@ -248,19 +257,33 @@ function addAdminMenu() {
 }
 <? } else echo get_option('s2c_css'); ?>
 </textarea><br />
+
+            Color of the sliding element: 
+            <select name="color">
+                <option value="gray">Gray</option>
+                <option value="green">Green</option>
+                <option value="red">Red</option>
+            </select>
+            <input type="hidden" name="<?php echo 'fucki_add_css'; ?>" value="X" />
 			<input type="submit" name="Submit" value="Submit" />
 			</form>
 			<hr />
 			<h3>Slider Options</h3>
 			<form name="form1" method="post" action="">
 			 <?php settings_fields( 's2c-settings-group' ); ?>
-			<input type="hidden" name="<?php echo 'fucking_add_settings'; ?>" value="Y">
+			<input type="hidden" name="<?php echo 'fucking_add_settings'; ?>" value="Y" />
 
 			<p>
 			Move Slider without clicking: 
 			<select name="noClick">
 				<option value="0"<?=((get_option('s2c_noClick') == '0')?" selected=\"selected\"":"") ?>>No</option>
 				<option value="1"<?=((get_option('s2c_noClick') == '1')?" selected=\"selected\"":"") ?>>Yes</option>
+			</select><br />
+            
+            Receiving Emails?
+            <select name="eMails">
+				<option value="yes"<?=((get_option('s2c_eMails') == 'yes')?" selected=\"selected\"":"") ?>>Yes</option>
+				<option value="no"<?=((get_option('s2c_eMails') == 'no')?" selected=\"selected\"":"") ?>>No</option>
 			</select><br />
 
 			<input type="submit" name="Submit" value="Submit" />
@@ -274,11 +297,15 @@ function addAdminMenu() {
 add_action('admin_menu', 'addAdminMenu');
 
 function save_option(){
-	if( $_POST[ 'fucki_add_css' ] == 'X' )
+	if( $_POST[ 'fucki_add_css' ] == 'X' ){
 		    update_option( 's2c_css', $_POST[ 'css' ] );
+            update_option( 's2c_color', $_POST[ 'color' ] );
+    }
 
-	if( $_POST[ 'fucking_add_settings' ] == 'Y' )
+	if( $_POST[ 'fucking_add_settings' ] == 'Y' ){
 		    update_option( 's2c_noClick', $_POST[ 'noClick' ] );
+		    update_option( 's2c_eMails', $_POST[ 'eMails' ] );
+    }
 
 }
 add_action('admin_init', 'save_option');
@@ -341,7 +368,7 @@ function addAdminMenuJS(){
 				
 				  var sslider = new Slider("sexyslider",{
 					  message: "Slide 2 Comment",
-					  color: "green",
+					  color: "<? if (get_option('s2c_color') != '') echo get_option('s2c_color'); else echo "green"; ?>",
 					<? if(get_option('s2c_noClick') == 1) { ?>
 					  mode: "noclick",
 					<? } ?>
