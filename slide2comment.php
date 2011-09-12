@@ -52,7 +52,7 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 			return;
 		}
 		wp_mail($email,
-			sprintf('[%s] %s by Comment2Slide',$blog,__('Comment marked as spam')),
+			sprintf('[%s] %s by Slide2Comment',$blog,__('Comment marked as spam')),
 			sprintf("%s\n\n%s: %s",$body,__('Spam list'),admin_url('edit-comments.php?comment_status=spam'))
 		);
 	}
@@ -62,9 +62,11 @@ License: http://creativecommons.org/licenses/by-nc-sa/3.0/de/
 /**** Hooks ****/
 
 	function addCaptcha() {
+		if(comments_open()){
 		?>
 		<div id="sexyslider"></div>
 		<?
+		}
 	}
 	add_filter('comments_template', 'addCaptcha');
 
